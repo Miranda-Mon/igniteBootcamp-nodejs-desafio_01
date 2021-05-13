@@ -13,10 +13,10 @@ const users = [];
 function checksExistsUserAccount(request, response, next) {
   const { username } = request.headers;
 
-  const user = users.find(user => user.username === username);
+  const user = users.find((user) => user.username === username);
 
   if (!user) {
-    return response.status(404).json({ error: 'User does not exists' });
+    return response.status(404).json({ error: "User does not exists" });
   }
 
   request.user = user;
@@ -24,13 +24,13 @@ function checksExistsUserAccount(request, response, next) {
   return next();
 }
 
-app.post('/users', (request, response) => {
+app.post("/users", (request, response) => {
   const { username, name } = request.body;
 
-  const userAlreadyExists = users.find(user => user.username === username);
+  const userAlreadyExists = users.find((user) => user.username === username);
 
   if (userAlreadyExists) {
-    return response.status(400).json({ error: 'User already exists' });
+    return response.status(400).json({ error: "User already exists" });
   }
 
   const user = {
@@ -38,7 +38,7 @@ app.post('/users', (request, response) => {
     name,
     username,
     todos: [],
-  }
+  };
 
   users.push(user);
 
@@ -49,7 +49,7 @@ app.get("/todos", checksExistsUserAccount, (request, response) => {
   return response.json(user.todos);
 });
 
-app.post('/todos', checksExistsUserAccount, (request, response) => {
+app.post("/todos", checksExistsUserAccount, (request, response) => {
   const { user } = request;
   const { title, deadline } = request.body;
 
@@ -58,23 +58,23 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
     title,
     done: false,
     deadline: new Date(deadline),
-    created_at: new Date()
-  }
+    created_at: new Date(),
+  };
 
   user.todos.push(todo);
 
   return response.status(201).json(todo);
 });
 
-app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
+app.put("/todos/:id", checksExistsUserAccount, (request, response) => {
   const { user } = request;
   const { title, deadline } = request.body;
   const { id } = request.params;
 
-  const checkTodo = user.todos.find(todo => todo.id === id);
+  const checkTodo = user.todos.find((todo) => todo.id === id);
 
   if (!checkTodo) {
-    return response.status(404).json({ error: 'Todo not found' });
+    return response.status(404).json({ error: "Todo not found" });
   }
 
   checkTodo.title = title;
